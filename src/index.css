@@ -12,6 +12,10 @@
   --color-cust-Grey-50: hsl(189, 47%, 97%);
   --color-cust-White: hsl(0, 100%, 100%);
 }
+
+html {
+  font-size: 24px;
+}
 /* 
 *,
 *::before,
