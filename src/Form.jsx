@@ -25,6 +25,32 @@ export default function Form() {
     setValidState(true);
     const amount = e.target.value;
     setTipPercent(amount);
+
+    const currAmount = tipAmount(total, headCount, amount);
+    setTipPerPerson(currAmount);
+    const currTotal = personTotal(total, headCount, currAmount);
+    setTotalPerPerson(currTotal);
+  }
+
+  function tipAmount(bill, people, percent) {
+    const preTip = Number(bill) / Number(people);
+    const withTip = preTip * Number(percent);
+    return withTip.toFixed(2);
+  }
+
+  function personTotal(bill, people, tip) {
+    const preTip = Number(bill) / Number(people);
+    const withTip = preTip + Number(tip);
+    return withTip.toFixed(2);
+  }
+
+  function handleReset(e) {
+    e.preventDefault();
+    setTotal("");
+    setHeadCount("");
+    setTipPercent("");
+    setTipPerPerson("$0.00");
+    setTotalPerPerson("$0.00");
   }
 
   return (
@@ -47,19 +73,19 @@ export default function Form() {
           Select Tip %
         </label>
         <div className="grid grid-cols-2 grid-rows-3 gap-6 mt-8">
-          <button onClick={handleClick} className={btnClass} value="5">
+          <button onClick={handleClick} className={btnClass} value="0.5">
             5%
           </button>
-          <button onClick={handleClick} className={btnClass} value="10">
+          <button onClick={handleClick} className={btnClass} value="0.10">
             10%
           </button>
-          <button onClick={handleClick} className={btnClass} value="15">
+          <button onClick={handleClick} className={btnClass} value="0.15">
             15%
           </button>
-          <button onClick={handleClick} className={btnClass} value="25">
+          <button onClick={handleClick} className={btnClass} value="0.25">
             25%
           </button>
-          <button onClick={handleClick} className={btnClass} value="50">
+          <button onClick={handleClick} className={btnClass} value="0.50">
             50%
           </button>
           <label htmlFor="custom" className="hidden"></label>
@@ -121,7 +147,10 @@ export default function Form() {
             </p>
           </div>
         </div>
-        <button className="bg-cust-Green-400 p-6 rounded-xl text-cust-Green-900 font-bold text-4xl hover:bg-cust-Green-400 cursor-pointer uppercase">
+        <button
+          onClick={handleReset}
+          className="bg-cust-Green-400 p-6 rounded-xl text-cust-Green-900 font-bold text-4xl hover:bg-cust-Green-400 cursor-pointer uppercase"
+        >
           Reset
         </button>
       </div>
