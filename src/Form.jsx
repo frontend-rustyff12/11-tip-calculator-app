@@ -1,57 +1,71 @@
 import { useState } from "react";
 import { btnClass, labelClass, inputClass } from "./customClasses";
 export default function Form() {
-  const [total, setTotal] = useState("");
-  const [headCount, setHeadCount] = useState("");
-  const [tipPercent, setTipPercent] = useState("");
-  const [tipPerPerson, setTipPerPerson] = useState("$0.00");
-  const [totalPerPerson, setTotalPerPerson] = useState("$0.00");
+  const [formData, setFormData] = useState({
+    total: "",
+    headCount: "",
+    tipPercent: "",
+  });
   const [validState, setValidState] = useState(true);
 
-  function handleTotal(e) {
-    setTotal(e.target.value);
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+
+    if (name === "tipPercent" && value) {
+      const { headCount } = formData;
+      if (!headCount || Number(headCount) <= 0) {
+        setValidState(false);
+        return;
+      }
+      setValidState(true);
+      const numericValue = Number(value);
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        setFormData((prev) => ({ ...prev, [name]: numericValue / 100 }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: "" })); // Clear invalid input
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   }
 
-  function handleHeadCount(e) {
-    setHeadCount(e.target.value);
-  }
-
-  function handleClick(e) {
+  function handleTipClick(e) {
     e.preventDefault();
-    if (headCount === "") {
+    const { headCount } = formData;
+
+    if (!headCount || Number(headCount) <= 0) {
       setValidState(false);
       return;
     }
     setValidState(true);
-    const amount = e.target.value;
-    setTipPercent(amount);
 
-    const currAmount = tipAmount(total, headCount, amount);
-    setTipPerPerson(currAmount);
-    const currTotal = personTotal(total, headCount, currAmount);
-    setTotalPerPerson(currTotal);
+    const tipPercent = e.target.value;
+    setFormData((prev) => ({ ...prev, tipPercent }));
   }
 
-  function tipAmount(bill, people, percent) {
-    const preTip = Number(bill) / Number(people);
-    const withTip = preTip * Number(percent);
-    return withTip.toFixed(2);
-  }
+  function calculateAmounts(bill, people, percent) {
+    const billNum = Number(bill) || 0;
+    const peopleNum = Number(people) || 1;
+    const percentNum = Number(percent) || 0;
 
-  function personTotal(bill, people, tip) {
-    const preTip = Number(bill) / Number(people);
-    const withTip = preTip + Number(tip);
-    return withTip.toFixed(2);
+    const preTip = billNum / peopleNum;
+    const tipPerPerson = (preTip * percentNum).toFixed(2);
+    const totalPerPerson = (preTip + Number(tipPerPerson)).toFixed(2);
+
+    return { tipPerPerson, totalPerPerson };
   }
 
   function handleReset(e) {
     e.preventDefault();
-    setTotal("");
-    setHeadCount("");
-    setTipPercent("");
-    setTipPerPerson("$0.00");
-    setTotalPerPerson("$0.00");
+    setFormData({ total: "", headCount: "", tipPercent: "" });
+    setValidState(true);
   }
+
+  const { tipPerPerson, totalPerPerson } = calculateAmounts(
+    formData.total,
+    formData.headCount,
+    formData.tipPercent
+  );
 
   return (
     <form className="bg-cust-White h-full rounded-t-4xl p-16 grid grid-cols-1 grid-rows-auto gap-8">
@@ -62,9 +76,9 @@ export default function Form() {
         <input
           type="text"
           className={`bg-[url('/icon-dollar.svg')] ${inputClass}`}
-          name="bill"
-          value={total}
-          onChange={handleTotal}
+          name="total"
+          value={formData.total}
+          onChange={handleInputChange}
           placeholder="0"
         />
       </div>
@@ -73,28 +87,87 @@ export default function Form() {
           Select Tip %
         </label>
         <div className="grid grid-cols-2 grid-rows-3 gap-6 mt-8">
-          <button onClick={handleClick} className={btnClass} value="0.5">
+          <button
+            onClick={handleTipClick}
+            className={`${btnClass} ${
+              formData.tipPercent === "0.05"
+                ? "bg-cust-Green-400"
+                : "bg-cust-Green-900"
+            }`}
+            value="0.05"
+            aria-label="Select 5% tip"
+            aria-pressed={formData.tipPercent === "0.05"}
+          >
             5%
           </button>
-          <button onClick={handleClick} className={btnClass} value="0.10">
+          <button
+            onClick={handleTipClick}
+            className={`${btnClass} ${
+              formData.tipPercent === "0.10"
+                ? "bg-cust-Green-400"
+                : "bg-cust-Green-900"
+            }`}
+            value="0.10"
+            aria-label="Select 10% tip"
+            aria-pressed={formData.tipPercent === "0.10"}
+          >
             10%
           </button>
-          <button onClick={handleClick} className={btnClass} value="0.15">
+          <button
+            onClick={handleTipClick}
+            className={`${btnClass} ${
+              formData.tipPercent === "0.15"
+                ? "bg-cust-Green-400"
+                : "bg-cust-Green-900"
+            }`}
+            value="0.15"
+            aria-label="Select 15% tip"
+            aria-pressed={formData.tipPercent === "0.15"}
+          >
             15%
           </button>
-          <button onClick={handleClick} className={btnClass} value="0.25">
+          <button
+            onClick={handleTipClick}
+            className={`${btnClass} ${
+              formData.tipPercent === "0.25"
+                ? "bg-cust-Green-400"
+                : "bg-cust-Green-900"
+            }`}
+            value="0.25"
+            aria-label="Select 25% tip"
+            aria-pressed={formData.tipPercent === "0.25"}
+          >
             25%
           </button>
-          <button onClick={handleClick} className={btnClass} value="0.50">
+          <button
+            onClick={handleTipClick}
+            className={`${btnClass} ${
+              formData.tipPercent === "0.50"
+                ? "bg-cust-Green-400"
+                : "bg-cust-Green-900"
+            }`}
+            value="0.50"
+            aria-label="Select 50% tip"
+            aria-pressed={formData.tipPercent === "0.50"}
+          >
             50%
           </button>
-          <label htmlFor="custom" className="hidden"></label>
+          <label htmlFor="tipPercent" className="sr-only">
+            Custom Tip Percentage
+          </label>
           <input
             className="placeholder:text-center text-right p-2 bg-gray-50 rounded text-5xl font-bold"
             type="text"
             placeholder="Custom"
-            name="custom"
+            name="tipPercent"
+            id="tipPercent"
+            value={formData.tipPercent ? formData.tipPercent * 100 : ""}
+            onChange={handleInputChange}
+            aria-describedby="tipPercent-hint"
           />
+          <p id="tipPercent-hint" className="sr-only">
+            Enter percentage like 15 for 15%
+          </p>
         </div>
       </div>
       <div className="flex flex-col">
@@ -115,10 +188,13 @@ export default function Form() {
           className={`bg-[url('/icon-person.svg')] ${inputClass} ${
             validState ? "" : "border border-red-500 rounded p-2"
           }`}
-          name="head-count"
-          value={headCount}
-          onChange={handleHeadCount}
+          name="headCount"
+          id="head-count"
+          value={formData.headCount}
+          onChange={handleInputChange}
           placeholder="0"
+          aria-describedby={validState ? undefined : "head-count-error"}
+          aria-invalid={!validState}
         />
       </div>
       <div className="p-8 grid bg-cust-Green-900  rounded-xl gap-12">

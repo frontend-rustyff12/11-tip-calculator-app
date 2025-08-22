@@ -1,5 +1,5 @@
 export const btnClass =
-  "bg-cust-Green-900 py-6 px-8 rounded-xl text-cust-White font-bold text-5xl hover:bg-cust-Green-400 cursor-pointer";
+  " py-6 px-8 rounded-xl text-cust-White font-bold text-5xl hover:bg-cust-Green-400 cursor-pointer";
 
 export const labelClass = "text-3xl text-cust-Grey-500 font-bold";
 
