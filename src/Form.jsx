@@ -76,6 +76,7 @@ export default function Form() {
           </label>
           <input
             type="text"
+            inputMode="numeric"
             className={`bg-[url('/icon-dollar.svg')] ${inputClass}`}
             name="total"
             value={formData.total}
@@ -159,6 +160,7 @@ export default function Form() {
             <input
               className="placeholder:text-center text-right p-2 bg-gray-50 rounded text-5xl font-bold lg:text-xl"
               type="text"
+              inputMode="numeric"
               placeholder="Custom"
               name="tipPercent"
               id="tipPercent"
@@ -186,6 +188,7 @@ export default function Form() {
           </div>
           <input
             type="text"
+            inputMode="numeric"
             className={`bg-[url('/icon-person.svg')] ${inputClass} ${
               validState ? "" : "border border-red-500 rounded p-2"
             }`}
@@ -230,7 +233,7 @@ export default function Form() {
         <div className="flex lg:items-end">
           <button
             onClick={handleReset}
-            className="w-full bg-cust-Green-400 p-6 rounded-xl text-cust-Green-900 font-bold text-4xl hover:bg-cust-Green-400 cursor-pointer uppercase lg:text-2xl lg:p-2"
+            className="w-full bg-cust-Green-400 p-6 rounded-xl text-cust-Green-900 font-bold text-4xl hover:bg-cust-Grey-400 cursor-pointer uppercase lg:text-2xl lg:p-2"
           >
             Reset
           </button>
